@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CalculatorInput, SimulationResult } from './types';
 import { calculateCompoundInterest } from './utils/calculations';
+import { formatNumber } from './utils/formatters';
 import { Results } from './components/Results';
 import { InfoSection } from './components/InfoSection';
 import { Calculator, DollarSign, Calendar, Percent, RefreshCw, BarChart2 } from 'lucide-react';
@@ -34,12 +35,25 @@ const App: React.FC = () => {
     setResult(null);
   };
 
-  // Helper to safely handle numeric input changes
+  // Helper to safely handle numeric input changes for Rate and Period
   const handleNumberChange = (field: keyof CalculatorInput, value: string) => {
     const num = parseFloat(value);
     setInput(prev => ({
       ...prev,
       [field]: isNaN(num) ? 0 : num
+    }));
+  };
+
+  // Helper to handle currency input changes (ATM style)
+  const handleCurrencyChange = (field: keyof CalculatorInput, value: string) => {
+    // Remove everything that is not a digit
+    const onlyDigits = value.replace(/\D/g, "");
+    // Convert to number (cents)
+    const numberValue = Number(onlyDigits) / 100;
+    
+    setInput(prev => ({
+      ...prev,
+      [field]: numberValue
     }));
   };
 
@@ -84,11 +98,10 @@ const App: React.FC = () => {
                       <span className="text-gray-500 sm:text-sm">R$</span>
                     </div>
                     <input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={input.initialValue || ''}
-                      onChange={(e) => handleNumberChange('initialValue', e.target.value)}
+                      type="text"
+                      inputMode="numeric"
+                      value={formatNumber(input.initialValue)}
+                      onChange={(e) => handleCurrencyChange('initialValue', e.target.value)}
                       className="block w-full rounded-md border-0 py-3 pl-10 pr-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-cyan-600 sm:text-sm sm:leading-6 bg-gray-50 focus:bg-white transition-all"
                       placeholder="0,00"
                     />
@@ -103,11 +116,10 @@ const App: React.FC = () => {
                       <span className="text-gray-500 sm:text-sm">R$</span>
                     </div>
                     <input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={input.monthlyValue || ''}
-                      onChange={(e) => handleNumberChange('monthlyValue', e.target.value)}
+                      type="text"
+                      inputMode="numeric"
+                      value={formatNumber(input.monthlyValue)}
+                      onChange={(e) => handleCurrencyChange('monthlyValue', e.target.value)}
                       className="block w-full rounded-md border-0 py-3 pl-10 pr-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-cyan-600 sm:text-sm sm:leading-6 bg-gray-50 focus:bg-white transition-all"
                       placeholder="0,00"
                     />
