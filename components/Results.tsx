@@ -30,38 +30,38 @@ export const Results: React.FC<ResultsProps> = ({ result }) => {
     <div className="space-y-8 animate-fade-in-up">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Total Final */}
-        <div className="bg-cyan-900 text-white p-6 rounded-xl shadow-lg transform transition-transform hover:scale-105">
-          <div className="flex items-center gap-2 mb-2 opacity-90">
-            <TrendingUp className="w-5 h-5" />
-            <h3 className="text-sm font-semibold uppercase tracking-wider">Valor Total Final</h3>
+        <div className="bg-blue-800 text-white p-6 rounded-md shadow-md border-l-4 border-blue-950 transform transition-transform hover:-translate-y-1">
+          <div className="flex items-center gap-2 mb-3 opacity-90 border-b border-blue-700 pb-2">
+            <TrendingUp className="w-5 h-5" strokeWidth={1.5} />
+            <h3 className="text-xs font-bold uppercase tracking-widest">Valor Total Final</h3>
           </div>
-          <p className="text-3xl font-bold">{formatCurrency(result.finalValue)}</p>
+          <p className="text-3xl font-bold font-mono tracking-tight">{formatCurrency(result.finalValue)}</p>
         </div>
 
         {/* Invested */}
-        <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-sm">
-          <div className="flex items-center gap-2 mb-2 text-gray-500">
-            <PiggyBank className="w-5 h-5" />
-            <h3 className="text-sm font-semibold uppercase tracking-wider">Valor Total Investido</h3>
+        <div className="bg-white border border-gray-300 p-6 rounded-md shadow-sm">
+          <div className="flex items-center gap-2 mb-3 text-gray-500 border-b border-gray-100 pb-2">
+            <PiggyBank className="w-5 h-5" strokeWidth={1.5} />
+            <h3 className="text-xs font-bold uppercase tracking-widest">Valor Total Investido</h3>
           </div>
-          <p className="text-3xl font-bold text-gray-800">{formatCurrency(result.totalInvested)}</p>
+          <p className="text-3xl font-bold text-gray-800 font-mono tracking-tight">{formatCurrency(result.totalInvested)}</p>
         </div>
 
         {/* Interest */}
-        <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-sm">
-          <div className="flex items-center gap-2 mb-2 text-gray-500">
-            <Coins className="w-5 h-5" />
-            <h3 className="text-sm font-semibold uppercase tracking-wider">Total em Juros</h3>
+        <div className="bg-white border border-gray-300 p-6 rounded-md shadow-sm">
+          <div className="flex items-center gap-2 mb-3 text-gray-500 border-b border-gray-100 pb-2">
+            <Coins className="w-5 h-5" strokeWidth={1.5} />
+            <h3 className="text-xs font-bold uppercase tracking-widest">Total em Juros</h3>
           </div>
-          <p className="text-3xl font-bold text-green-600">{formatCurrency(result.totalInterest)}</p>
+          <p className="text-3xl font-bold text-blue-600 font-mono tracking-tight">{formatCurrency(result.totalInterest)}</p>
         </div>
       </div>
 
       {/* Chart Section */}
-      <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+      <div className="bg-white p-6 rounded-md shadow-sm border border-gray-300">
         <div className="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
-          <h3 className="text-xl font-bold text-cyan-900">
-            Gráfico:
+          <h3 className="text-lg font-bold text-blue-900 tracking-tight">
+            Projeção Gráfica
           </h3>
         </div>
 
@@ -73,48 +73,56 @@ export const Results: React.FC<ResultsProps> = ({ result }) => {
             >
               <defs>
                 <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#0891b2" stopOpacity={0.1}/>
-                  <stop offset="95%" stopColor="#0891b2" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="#1d4ed8" stopOpacity={0.15}/>
+                  <stop offset="95%" stopColor="#1d4ed8" stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
               <XAxis 
                 dataKey="formattedLabel" 
-                tick={{ fontSize: 12, fill: '#6b7280' }} 
+                tick={{ fontSize: 11, fill: '#64748b' }} 
                 axisLine={false}
                 tickLine={false}
+                dy={10}
               />
               <YAxis 
                 tickFormatter={(value) => 
                   new Intl.NumberFormat('pt-BR', { notation: "compact", compactDisplay: "short" }).format(value)
                 }
-                tick={{ fontSize: 12, fill: '#6b7280' }}
+                tick={{ fontSize: 11, fill: '#64748b' }}
                 axisLine={false}
                 tickLine={false}
               />
               <Tooltip 
-                formatter={(value: number) => formatCurrency(value)}
-                labelStyle={{ color: '#111827', fontWeight: 'bold' }}
-                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                formatter={(value: number) => [formatCurrency(value), ""]}
+                labelStyle={{ color: '#1e3a8a', fontWeight: 'bold', fontSize: '0.875rem' }}
+                contentStyle={{ 
+                  borderRadius: '4px', 
+                  border: '1px solid #e2e8f0', 
+                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                  padding: '12px'
+                }}
               />
-              <Legend verticalAlign="top" height={36} />
+              <Legend verticalAlign="top" height={36} iconType="rect" />
               <Area 
                 type="monotone" 
                 dataKey="totalAccumulated" 
-                name="Total Acumulado (Juros + Investido)" 
-                stroke="#155e75" 
+                name="Total Acumulado" 
+                stroke="#1d4ed8" 
                 fillOpacity={1} 
                 fill="url(#colorTotal)" 
                 strokeWidth={2}
+                activeDot={{ r: 6, strokeWidth: 0 }}
               />
               <Area 
                 type="monotone" 
                 dataKey="totalInvested" 
                 name="Valor Investido" 
-                stroke="#1f2937" 
+                stroke="#475569" 
                 fill="transparent"
                 strokeWidth={2}
-                strokeDasharray="5 5"
+                strokeDasharray="4 4"
+                activeDot={{ r: 4 }}
               />
             </AreaChart>
           </ResponsiveContainer>
@@ -122,27 +130,27 @@ export const Results: React.FC<ResultsProps> = ({ result }) => {
       </div>
 
       {/* Table Section */}
-      <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
-        <div className="mb-4 text-center">
-           <h3 className="text-xl font-bold text-cyan-900">
-            Tabela:
+      <div className="bg-white p-6 rounded-md shadow-sm border border-gray-300">
+        <div className="mb-4 text-center border-b border-gray-100 pb-4">
+           <h3 className="text-lg font-bold text-blue-900 tracking-tight">
+            Detalhamento Mensal
           </h3>
         </div>
         
-        <div className="overflow-x-auto custom-scrollbar max-h-[500px] border border-gray-100 rounded-lg">
+        <div className="overflow-x-auto custom-scrollbar max-h-[500px] border border-gray-200 rounded-sm">
           <table className="w-full text-sm text-left text-gray-600">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-200 sticky top-0">
+            <thead className="text-xs text-gray-600 uppercase bg-gray-100 sticky top-0 border-b border-gray-200">
               <tr>
-                <th scope="col" className="px-6 py-4 font-bold">Mês</th>
-                <th scope="col" className="px-6 py-4 font-bold">Juros</th>
-                <th scope="col" className="px-6 py-4 font-bold">Total Investido</th>
-                <th scope="col" className="px-6 py-4 font-bold">Total Juros</th>
-                <th scope="col" className="px-6 py-4 font-bold">Total Acumulado</th>
+                <th scope="col" className="px-6 py-4 font-bold tracking-wider">Mês</th>
+                <th scope="col" className="px-6 py-4 font-bold tracking-wider">Juros</th>
+                <th scope="col" className="px-6 py-4 font-bold tracking-wider">Total Investido</th>
+                <th scope="col" className="px-6 py-4 font-bold tracking-wider">Total Juros</th>
+                <th scope="col" className="px-6 py-4 font-bold tracking-wider">Total Acumulado</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-gray-100 font-mono text-xs md:text-sm">
               {result.monthlyData.map((data, index) => (
-                <tr key={index} className="bg-white hover:bg-gray-50 transition-colors">
+                <tr key={index} className="bg-white hover:bg-blue-50 transition-colors">
                   <td className="px-6 py-4 font-medium text-gray-900 text-center">
                     {data.month}
                   </td>
@@ -152,10 +160,10 @@ export const Results: React.FC<ResultsProps> = ({ result }) => {
                   <td className="px-6 py-4 text-gray-700">
                     {formatCurrency(data.totalInvested)}
                   </td>
-                  <td className="px-6 py-4 text-gray-700">
+                  <td className="px-6 py-4 text-green-600 font-medium">
                     {formatCurrency(data.totalInterest)}
                   </td>
-                  <td className="px-6 py-4 font-bold text-gray-900">
+                  <td className="px-6 py-4 font-bold text-blue-900">
                     {formatCurrency(data.totalAccumulated)}
                   </td>
                 </tr>
